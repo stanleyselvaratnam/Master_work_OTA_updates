@@ -1,0 +1,32 @@
+header:
+  version: 11
+
+repos:
+  poky:
+    path: "./poky"
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+
+  meta-openembedded:
+    url: "https://github.com/openembedded/meta-openembedded.git"
+    branch: "scarthgap"
+    layers:
+      meta-oe:
+      meta-networking:
+      meta-python:
+
+  meta-my-layer:
+    path: "./meta-my-layer"
+    layers:
+      .:
+
+machine: "genericarm64"
+
+target:
+  - core-image-minimal
+
+env:
+  BB_NUMBER_THREADS: "4"
+  PARALLEL_MAKE: "-j4"
