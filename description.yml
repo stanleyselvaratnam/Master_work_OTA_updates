@@ -18,8 +18,6 @@ repos:
       meta-oe:
       meta-networking:
       meta-python:
-
-
  
 # Configuration de la build
 build_system: oe
