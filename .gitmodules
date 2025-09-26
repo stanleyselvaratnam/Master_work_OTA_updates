@@ -4,3 +4,4 @@
 [submodule "poky"]
 	path = poky
 	url = https://github.com/yoctoproject/poky
+	branch = scarthgap
