@@ -1,0 +1,14 @@
+From: Stanley <stanley@example.com>
+Date: Thu, 2 Oct 2025 17:00:00 +0000
+Subject: [PATCH] add custom printk for Mender test
+
+---
+ init/main.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/init/main.c b/init/main.c
+index abcdef..123456 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -123,6 +123,9 @@ void __init start_kernel(void)
++    printk(KERN_INFO "Custom kernel build for Mender test\n");

@@ -25,11 +25,14 @@ repos:
     layers:
       meta-mender-core:
 
-  meta-local:
+  my-layer:
     path: "meta-my-layer"
     layers:
       meta-local:
+      meta-myapps:
+      # meta-kernel-custom:
       # meta-wic:
+  
 # Configuration de la build
 build_system: oe
 
@@ -63,17 +66,30 @@ local_conf_header:
     EXTRA_IMAGE_FEATURES ?= "debug-tweaks ssh-server-openssh"
 
     # Packages to include in the image
-    IMAGE_INSTALL:append = " htop vim ca-certificates"
+    IMAGE_INSTALL:append = " htop vim ca-certificates helloworld"
 
     # ================================================================
     # Bootloader configuration
     # ================================================================
 
     # U-Boot bootloader files to include in image
+    UBOOT_MACHINE = "qemu_arm64_defconfig"
     IMAGE_BOOT_FILES = "u-boot.bin"
 
     # Init system to use
     INIT_MANAGER = "systemd"
+
+
+    # # Kernel et DTB
+    # KERNEL_DEVICETREE = "qemu.dtb"
+
+    # UBOOT_CONFIGURE_ARGS:append = " --disable-efi"
+
+    # # Install files in /boot pour U-Boot
+    # IMAGE_INSTALL:append = " kernel-image kernel-devicetree"
+
+    # # Disable EFI-related packages if any
+    # # IMAGE_INSTALL:remove = "efi-utils"
 
     # ================================================================
     # Image types
@@ -87,7 +103,7 @@ local_conf_header:
     # ================================================================
 
     # Name of the Mender artifact
-    MENDER_ARTIFACT_NAME = "release-1"
+    MENDER_ARTIFACT_NAME = "release-2"
 
     # Mender server URL and tenant token
     MENDER_SERVER_URL = "https://eu.hosted.mender.io"
