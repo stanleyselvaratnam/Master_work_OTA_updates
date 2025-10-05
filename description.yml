@@ -6,6 +6,7 @@ repos:
   poky:
     url: "https://git.yoctoproject.org/poky.git"
     refspec: "scarthgap"
+    #commit: "e3ce89324da1e33c17c9180ef846f41d92616254"
     layers:
       meta:
       meta-poky:
@@ -14,6 +15,7 @@ repos:
   meta-openembedded:
     url: "https://git.openembedded.org/meta-openembedded"
     refspec: "scarthgap"
+    #commit: "e621da947048842109db1b4fd3917a02e0501aa2"
     layers:
       meta-oe:
       meta-networking:
@@ -22,8 +24,16 @@ repos:
   meta-mender:
     url: "https://github.com/mendersoftware/meta-mender.git"
     refspec: "scarthgap"
+    #commit: "bff4b64715aae33e5c3a0bf5c804e6a1f4726c1c"
     layers:
       meta-mender-core:
+
+  meta-custom:
+    url: "https://github.com/stanleyselvaratnam/meta-custom.git"
+    refspec: "main"
+    layers:
+      meta-hellocustom:
+    #update: true
 
   my-layer:
     path: "meta-my-layer"
@@ -66,7 +76,7 @@ local_conf_header:
     EXTRA_IMAGE_FEATURES ?= "debug-tweaks ssh-server-openssh"
 
     # Packages to include in the image
-    IMAGE_INSTALL:append = " htop vim ca-certificates helloworld"
+    IMAGE_INSTALL:append = " htop vim ca-certificates helloworld hellocustom"
 
     # ================================================================
     # Bootloader configuration
@@ -103,7 +113,7 @@ local_conf_header:
     # ================================================================
 
     # Name of the Mender artifact
-    MENDER_ARTIFACT_NAME = "release-2"
+    MENDER_ARTIFACT_NAME = "release-3"
 
     # Mender server URL and tenant token
     MENDER_SERVER_URL = "https://eu.hosted.mender.io"
