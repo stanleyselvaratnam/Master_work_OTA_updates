@@ -9,3 +9,7 @@
 	path = meta-mender
 	url = https://github.com/mendersoftware/meta-mender.git
 	branch = scarthgap
+[submodule "meta-custom"]
+	path = meta-custom
+	url = https://github.com/stanleyselvaratnam/meta-custom.git
+	branch = main
