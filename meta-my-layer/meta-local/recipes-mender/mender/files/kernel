@@ -1,0 +1,88 @@
+#!/bin/sh
+# ===============================================================
+# Update Module: kernel
+# Purpose: Update kernel Image in /boot with rollback & reboot
+# Mender Artifact type: kernel
+# Author : Stanley Selvaratnam
+# ===============================================================
+
+set -e
+
+STATE="$1"
+FILES="$2"
+
+tmp_backup_dir="$FILES/tmp/backup"
+dest_dir_file="$FILES/files/dest_dir"
+filename_file="$FILES/files/filename"
+permissions_file="$FILES/files/permissions"
+
+safe_copy() {
+    if [ $# -gt 2 ]; then
+        echo "safe_copy can only handle one file copy at a time" >&2
+        exit 2
+    fi
+    cp -a "$1" "$2".tmp || return $?
+    sync "$2".tmp || return $?
+    mv "$2".tmp "$2" || return $?
+    sync "$(dirname "$2")" || return $?
+}
+
+case "$STATE" in
+    NeedsArtifactReboot)
+        echo "Automatic"
+        ;;
+
+    SupportsRollback)
+        echo "Yes"
+        ;;
+
+    ArtifactInstall)
+        dest_dir=$(cat "$dest_dir_file")
+        filename=$(cat "$filename_file")
+        test -z "$dest_dir" -o -z "$filename" && \
+            echo "Fatal error: dest_dir or filename are undefined." >&2 && exit 1
+
+        mkdir -p "$dest_dir"
+        mkdir -p "$tmp_backup_dir"
+
+        # Backup old kernel if it exists
+        if test -f "$dest_dir/$filename"; then
+            safe_copy "$dest_dir/$filename" "$tmp_backup_dir/$filename"
+        fi
+
+        # Apply permissions if file exists
+        if test -f "$permissions_file"; then
+            mode=$(cat "$permissions_file")
+            chmod "$mode" "$FILES/files/$filename"
+        fi
+
+        # Copy new kernel
+        safe_copy "$FILES/files/$filename" "$dest_dir/$filename"
+
+        # Sync to make sure bootloader sees it
+        sync
+        ;;
+
+    ArtifactVerifyReboot)
+        # Optionally verify that the kernel file exists after reboot
+        dest_dir=$(cat "$dest_dir_file")
+        filename=$(cat "$filename_file")
+        test -f "$dest_dir/$filename" || exit 1
+        ;;
+
+    ArtifactRollback)
+        # Restore backup if it exists
+        filename=$(cat "$filename_file")
+        dest_dir=$(cat "$dest_dir_file")
+        if test -f "$tmp_backup_dir/$filename"; then
+            safe_copy "$tmp_backup_dir/$filename" "$dest_dir/$filename"
+        fi
+        ;;
+
+    ArtifactCommit)
+        # Commit is a no-op for kernel; just clean backup
+        rm -rf "$tmp_backup_dir"
+        ;;
+esac
+
+exit 0

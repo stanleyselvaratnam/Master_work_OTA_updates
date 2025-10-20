@@ -172,7 +172,7 @@ local_conf_header:
     # * ================================================================
 
     # Name of the Mender artifact
-    MENDER_ARTIFACT_NAME = "release-1"
+    MENDER_ARTIFACT_NAME = "release-2"
 
     # Mender server URL and tenant token
     MENDER_SERVER_URL = "https://eu.hosted.mender.io"
@@ -207,6 +207,8 @@ local_conf_header:
     # Clé publique utilisée pour vérifier les artifacts pendant le build
     # MENDER_ARTIFACT_VERIFY_KEY  = "${TOPDIR}/../mender-keys/public.key"
 
+    # Added the script to update the kernel
+    # IMAGE_INSTALL:append = " kernel-update-module"
 
     IMAGE_INSTALL:append = " mender-artifact-info"
     # ! ================================================================
