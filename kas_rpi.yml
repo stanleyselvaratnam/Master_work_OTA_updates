@@ -175,7 +175,8 @@ local_conf_header:
     MENDER_ARTIFACT_NAME = "release-2"
 
     # Mender server URL and tenant token
-    MENDER_SERVER_URL = "https://eu.hosted.mender.io"
+    # MENDER_SERVER_URL = "https://eu.hosted.mender.io"
+    MENDER_SERVER_URL = ""
     MENDER_TENANT_TOKEN = "AVi5j0YkJYNeYRamqwzY2r9WRz3sJo5nbGDGaE0uXtQ"
 
     # Device type
