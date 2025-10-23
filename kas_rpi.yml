@@ -186,7 +186,7 @@ local_conf_header:
     # * ================================================================
 
     # Name of the Mender artifact
-    MENDER_ARTIFACT_NAME = "release-1"
+    MENDER_ARTIFACT_NAME = "release-2"
 
     # Mender server URL and tenant token
     # MENDER_SERVER_URL = "https://eu.hosted.mender.io"
