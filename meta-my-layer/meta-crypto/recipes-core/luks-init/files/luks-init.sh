@@ -4,11 +4,14 @@
 DEVICE="/dev/mmcblk0p5"
 MAPPER_NAME="securedata"
 MOUNT_POINT="/mnt/securedata"
-KEY_FILE="/etc/lukskey.bin"
+KEY_FILE="/data/lukskey.bin"
 
 log() {
     echo "[LUKS-INIT] $1" | tee -a /var/log/luks-init.log
 }
+
+# Crée le répertoire de logs si nécessaire
+mkdir -p /var/log
 
 # Check if already LUKS encrypted
 if cryptsetup isLuks $DEVICE >/dev/null 2>&1; then
