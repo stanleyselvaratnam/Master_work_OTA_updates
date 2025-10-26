@@ -1,2 +1,2 @@
 # Encrypted partition for secure data
-securedata /dev/mmcblk0p5 /etc/lukskey.bin luks
+securedata /dev/mmcblk0p5 /data/lukskey.bin luks
