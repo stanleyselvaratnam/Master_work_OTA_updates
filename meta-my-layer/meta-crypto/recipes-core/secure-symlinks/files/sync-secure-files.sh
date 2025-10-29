@@ -19,7 +19,7 @@ while IFS=: read -r symlink target; do
     [ -z "$symlink" ] && continue
     echo "Processing symlink $symlink -> $target" >> $LOG_FILE
 
-    # Copier le fichier source vers la partition cible si absent dans partition chiffrée
+    # Copy the source file to the encrypted partition if it does not exist there
     if [ ! -f "$target" ]; then
         if [ -f "$symlink" ]; then
             mkdir -p "$(dirname "$target")"
@@ -33,7 +33,7 @@ while IFS=: read -r symlink target; do
 
     mkdir -p "$(dirname "$symlink")"
 
-    # Supprimer fichier/lien existants
+    # Remove existing file or symlink
     if [ -L "$symlink" ]; then
         rm -f "$symlink"
         echo "Removed existing symlink $symlink" >> $LOG_FILE
@@ -42,7 +42,7 @@ while IFS=: read -r symlink target; do
         echo "Removed existing file/directory $symlink" >> $LOG_FILE
     fi
 
-    # Créer le lien symbolique
+    # Create the new symbolic link
     ln -s "$target" "$symlink"
     echo "Created symlink $symlink -> $target" >> $LOG_FILE
 done < "$MAPPING_LIST"
