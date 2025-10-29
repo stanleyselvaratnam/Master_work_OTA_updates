@@ -266,6 +266,9 @@ local_conf_header:
 
     IMAGE_INSTALL:append = " mender-artifact-info"
 
+    # MENDER_FEATURES_ENABLE:append = " mender-uboot"
+    # MENDER_FEATURES_DISABLE:append = " mender-grub mender-image-uefi"
+
     # ! ================================================================
     # ! ENCRYPTED PARTITION SETUP
     # ! ================================================================
@@ -293,7 +296,7 @@ local_conf_header:
 
     # Pour créer les liens symboliques de la partition chiffrée au rootfs
     IMAGE_INSTALL:append = " secure-symlinks"
-
+    IMAGE_INSTALL:append = " mender-cert"
     # ! ================================================================
     # ! Test Rollback (meta-rollback)
     # ! ================================================================
