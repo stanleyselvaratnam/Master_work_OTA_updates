@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Ajouter les partitions de l'image
-sudo kpartx -av ../build-imx8mp/tmp/deploy/images/verdin-imx8mp/Reference-Minimal-Image-imx8mp-verdin.gptimg 
+sudo kpartx -av ../build-imx8mp/tmp/deploy/images/verdin-imx8mp/Reference-Minimal-Image-imx8mp-verdin.wic
 
 # Monter chaque partition et lister son contenu
 for part in /dev/mapper/loop0p*; do
