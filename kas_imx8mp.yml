@@ -23,6 +23,7 @@ repos:
       meta-multimedia:
       meta-gnome:
       meta-filesystems:
+      meta-perl:
 
   meta-qt5:
     url: "https://github.com/meta-qt5/meta-qt5.git"
@@ -32,12 +33,12 @@ repos:
     url: "https://github.com/schnitzeltony/meta-qt5-extra.git"
     refspec: "master"
 
-
   meta-security:
     url: "git://git.yoctoproject.org/meta-security"
     refspec: "scarthgap"
     layers:
       meta-tpm:
+      .:
 
   meta-freescale-distro:
     url: "https://github.com/Freescale/meta-freescale-distro.git"
@@ -68,9 +69,9 @@ repos:
     url: "https://git.toradex.com/cgit/meta-toradex-demos.git/"
     refspec: "scarthgap-7.x.y"
 
-  # meta-toradex-security:
-  #   url: "https://github.com/toradex/meta-toradex-security.git"
-  #   refspec: "scarthgap-7.x.y"
+  meta-toradex-security:
+    url: "https://github.com/toradex/meta-toradex-security.git"
+    refspec: "scarthgap-7.x.y"
 
   meta-mender-community:
     url: "https://github.com/mendersoftware/meta-mender-community.git"
@@ -90,6 +91,7 @@ repos:
     path: "meta-my-layer"
     layers:
       meta-wic:
+      # meta-mender-toradex-nxp:
 
 
 build_system: oe
@@ -169,3 +171,16 @@ local_conf_header:
 
     # UBOOT_CONFIG ??= "sd"
     # UBOOT_ENV ?= "u-boot-initial-env"
+
+    # * ================================================================
+    # * Security
+    # * ================================================================
+    INHERIT += "tdxref-signed"
+    TDX_IMX_HAB_ENABLE = "0"
+    INITRAMFS_IMAGE = "tdx-reference-ramdisk-image"
+    INITRAMFS_IMAGE_NAME = "tdx-reference-ramdisk-image-imx8mp-verdin"
+    KERNEL_IMAGE_NAME = "tdx-reference-ramdisk-image"
+
+
+    DISTRO_FEATURES:append = " security"
+
