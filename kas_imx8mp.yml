@@ -29,9 +29,28 @@ repos:
     url: "https://github.com/meta-qt5/meta-qt5.git"
     refspec: "scarthgap"
   
-  meta-qt5-extra:
-    url: "https://github.com/schnitzeltony/meta-qt5-extra.git"
-    refspec: "master"
+  meta-lts-mixins-uboot:
+    url: https://git.yoctoproject.org/meta-lts-mixins
+    refspec: "scarthgap/u-boot"
+    path: "meta-lts-mixins"
+  # meta-qt5-extra:
+  #   url: "https://github.com/schnitzeltony/meta-qt5-extra.git"
+  #   refspec: "master"
+  
+  meta-arm:
+    url: "git://git.yoctoproject.org/meta-arm"
+    refspec: "scarthgap"
+    layers:
+      meta-arm:
+      meta-arm-toolchain:
+      meta-arm-bsp:
+
+  meta-ti:
+    url: "git://git.yoctoproject.org/meta-ti"
+    refspec: "scarthgap"
+    layers:
+      meta-ti-bsp:
+      meta-ti-extras:
 
   meta-security:
     url: "git://git.yoctoproject.org/meta-security"
@@ -73,6 +92,14 @@ repos:
     url: "https://github.com/toradex/meta-toradex-security.git"
     refspec: "scarthgap-7.x.y"
 
+  meta-toradex-ti:
+    url: "git://git.toradex.com/meta-toradex-ti"
+    refspec: "scarthgap-7.x.y"
+
+  meta-toradex-tezi:
+    url: "https://github.com/toradex/meta-toradex-tezi.git"
+    refspec: "scarthgap-7.x.y"
+
   meta-mender-community:
     url: "https://github.com/mendersoftware/meta-mender-community.git"
     refspec: "scarthgap"
@@ -108,7 +135,6 @@ env:
 
 local_conf_header:
   my-config: |
-
     INHERIT += "rm_work"
     PACKAGE_CLASSES ?= "package_ipk"
     INIT_MANAGER = "systemd"
@@ -121,12 +147,7 @@ local_conf_header:
     ACCEPT_FSL_EULA = "1"
 
     # Pas de Mender ici, kernel + dtb natifs pour imx8mp-evk QEMU
-    KERNEL_DEVICETREE = "imx8mp-evk.dtb"
-
-    
-    # IMAGE_CLASSES += "image_type_mender_tezi"
-    # IMAGE_FSTYPES:append = " mender_tezi"
-    # IMAGE_FSTYPES:remove = " teziimg"
+    # KERNEL_DEVICETREE = "freescale/imx8mp-verdin-nonwifi-dev.dtb freescale/imx8mp-verdin-wifi-dev.dtb"
 
     IMAGE_FSTYPES += "wic"
     WKS_FILE = "imx8mp-custom"
@@ -167,7 +188,7 @@ local_conf_header:
 
    
     IMAGE_INSTALL:append = " mender-artifact-info"
-    IMAGE_BOOT_FILES += "boot.scr-verdin-imx8mp"
+    # IMAGE_BOOT_FILES += "boot.scr-verdin-imx8mp"
 
     # UBOOT_CONFIG ??= "sd"
     # UBOOT_ENV ?= "u-boot-initial-env"
@@ -175,12 +196,32 @@ local_conf_header:
     # * ================================================================
     # * Security
     # * ================================================================
-    INHERIT += "tdxref-signed"
-    TDX_IMX_HAB_ENABLE = "0"
-    INITRAMFS_IMAGE = "tdx-reference-ramdisk-image"
-    INITRAMFS_IMAGE_NAME = "tdx-reference-ramdisk-image-imx8mp-verdin"
-    KERNEL_IMAGE_NAME = "tdx-reference-ramdisk-image"
+    # INHERIT += "tdxref-signed"
+    # TDX_IMX_HAB_ENABLE = "0"
+    # INITRAMFS_IMAGE = "tdx-reference-ramdisk-image"
+    # INITRAMFS_IMAGE_NAME = "tdx-reference-ramdisk-image-imx8mp-verdin"
+    # KERNEL_IMAGE_NAME = "tdx-reference-ramdisk-image"
 
 
-    DISTRO_FEATURES:append = " security"
+    # DISTRO_FEATURES:append = " security"
 
+    # * ================================================================
+    # * Toradex Easy Installer
+    # * ================================================================
+    INHERIT += "toradex-mirrors"
+    BBMASK += "/meta-freescale/recipes-bsp/alsa-state"
+
+    # Configurez explicitement le noyau préféré
+    PREFERRED_PROVIDER_virtual/kernel = "linux-toradex"
+
+    # UBOOT_MACHINE pour config u-boot
+    # UBOOT_MACHINE = "verdin-imx8mp"
+    UBOOT_CONFIG_BASENAME = "verdin-imx8mp"
+    # CORE_IMAGE_EXTRA_INSTALL += "firmware-imx"
+
+    IMAGE_CLASSES += "image_type_tezi"
+    # IMAGE_FSTYPES:append = " mender_tezi"
+    IMAGE_FSTYPES:remove = " tezirunimg"
+
+    # IMAGE_CLASSES:remove = "image_type_tezi"
+    # IMAGE_FSTYPES:remove = "tezi teziimg"
