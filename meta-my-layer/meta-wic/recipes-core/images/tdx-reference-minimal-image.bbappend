@@ -9,8 +9,10 @@ IMAGE_FSTYPES += "wic"
 
 IMAGE_NAME_SUFFIX = "-imx8mp-custom"
 
-
+# Dépendances de construction de l'image
+IMAGE_DEPENDS += "backup-image"
 do_image_wic[depends] += "tdx-reference-minimal-image:do_image_ext4"
 do_image_wic[depends] += "tdx-reference-minimal-image:do_image_dataimg"
 do_image_wic[depends] += "tdx-reference-minimal-image:do_image_bootimg"
-do_image_wic[depends] += "backup-image:do_deploy"
+do_image_wic[depends] += "backup-image:do_image backup-image:do_deploy"
+
