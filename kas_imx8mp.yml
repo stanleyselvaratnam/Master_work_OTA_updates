@@ -114,10 +114,18 @@ repos:
     layers:
       meta-mender-core:
 
+  meta-custom:
+    url: "https://github.com/stanleyselvaratnam/meta-custom.git"
+    refspec: "main"
+    layers:
+      meta-key:
+
   meta-my-layer:
     path: "meta-my-layer"
     layers:
       meta-wic:
+      meta-local:
+      meta-connectivity:
       # meta-mender-toradex-nxp:
 
 
@@ -149,6 +157,10 @@ local_conf_header:
     # Pas de Mender ici, kernel + dtb natifs pour imx8mp-evk QEMU
     # KERNEL_DEVICETREE = "freescale/imx8mp-verdin-nonwifi-dev.dtb freescale/imx8mp-verdin-wifi-dev.dtb"
 
+    # * ================================================================
+    # * Partition with WKS (meta-wic)
+    # * ================================================================
+
     IMAGE_FSTYPES += "wic"
     WKS_FILE = "imx8mp-custom"
     # UBOOT_BINARY = "u-boot-sd-2024.07-r0.bin"
@@ -164,9 +176,19 @@ local_conf_header:
     MENDER_ARTIFACT_NAME = "release-test"
 
     # # Mender server URL and tenant token
-    # # MENDER_SERVER_URL = "https://eu.hosted.mender.io"
-    # # MENDER_SERVER_URL = ""
-    # # MENDER_TENANT_TOKEN = "AVi5j0YkJYNeYRamqwzY2r9WRz3sJo5nbGDGaE0uXtQ"
+    # MENDER_SERVER_URL = "https://eu.hosted.mender.io"
+    # MENDER_SERVER_URL = ""
+    # MENDER_TENANT_TOKEN = "AVi5j0YkJYNeYRamqwzY2r9WRz3sJo5nbGDGaE0uXtQ"
+
+    # Polling intervals (empty = default)
+    MENDER_UPDATE_POLL_INTERVAL_SECONDS = ""
+    MENDER_INVENTORY_POLL_INTERVAL_SECONDS = ""
+    MENDER_RETRY_POLL_INTERVAL_SECONDS = ""
+
+    MENDER_BOOT_PART = "${MENDER_STORAGE_DEVICE_BASE}1"
+    MENDER_DATA_PART = "${MENDER_STORAGE_DEVICE_BASE}4"
+    MENDER_ROOTFS_PART_A = "${MENDER_STORAGE_DEVICE_BASE}2"
+    MENDER_ROOTFS_PART_B = "${MENDER_STORAGE_DEVICE_BASE}3"
 
     # Device type
     MENDER_DEVICE_TYPE = "imx8mp-verdin"
@@ -178,13 +200,20 @@ local_conf_header:
     MENDER_DATA_PART_SIZE_MB = "128"
     MENDER_FEATURES_ENABLE:append = " mender-image-gpt mender-uboot"
     MENDER_FEATURES_DISABLE:append = " mender-grub mender-image-uefi"
+
     # ! Enable automatic U-Boot configuration for partitions
     MENDER_UBOOT_AUTO_CONFIGURE = "1"
 
-    # # Polling intervals (empty = default)
-    # # MENDER_UPDATE_POLL_INTERVAL_SECONDS = ""
-    # # MENDER_INVENTORY_POLL_INTERVAL_SECONDS = ""
-    # # MENDER_RETRY_POLL_INTERVAL_SECONDS = ""
+    # --- MENDER SIGNING / VERIFY CONFIGURATION ---
+
+    # Clé publique installée par mender-keys.bb
+    IMAGE_INSTALL:append = " mender-keys mender-keys-rotation"
+
+    # Clé privée utilisée pour signer les artifacts (chemin absolu)
+    MENDER_ARTIFACT_SIGNING_KEY = "${TOPDIR}/../mender-keys/private.key"
+
+    # Clé publique utilisée pour vérifier les artifacts pendant le build
+    # MENDER_ARTIFACT_VERIFY_KEY  = "${TOPDIR}/../mender-keys/public.key"
 
    
     IMAGE_INSTALL:append = " mender-artifact-info"
@@ -192,6 +221,24 @@ local_conf_header:
 
     # UBOOT_CONFIG ??= "sd"
     # UBOOT_ENV ?= "u-boot-initial-env"
+
+
+    # * ================================================================
+    # * ENABLE SSH
+    # * ================================================================
+
+    # Extra image features: debugging tools and SSH server
+    EXTRA_IMAGE_FEATURES ?= "ssh-server-openssh"
+    IMAGE_INSTALL:append = " ssh-keys"
+
+    INHERIT += "extrausers"
+    EXTRA_USERS_PARAMS = "usermod -p '$(openssl passwd -1 password123)' root;"
+
+    # * ================================================================
+    # * STATIC HOST MAPPING
+    # * ================================================================
+    
+    # IMAGE_INSTALL:append = " hosts"
 
     # * ================================================================
     # * Security
@@ -231,3 +278,11 @@ local_conf_header:
 
     # # IMAGE_CLASSES:remove = "image_type_tezi"
     # # IMAGE_FSTYPES:remove = "tezi teziimg"
+
+    # ? ================================================================
+    # ? Build performance tuning
+    # ? ================================================================
+
+    # Limit the number of parallel tasks to avoid memory issues
+    BB_NUMBER_THREADS = "10"
+    PARALLEL_MAKE = "-j 10"
