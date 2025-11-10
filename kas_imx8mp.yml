@@ -172,6 +172,10 @@ local_conf_header:
 
     INHERIT += "mender-full"
 
+
+    PREFERRED_PROVIDER_u-boot = "u-boot-mender"
+    PREFERRED_PROVIDER_u-boot-fw-utils = "u-boot-fw-utils-mender"
+
     # Name of the Mender artifact
     MENDER_ARTIFACT_NAME = "release-test"
 
