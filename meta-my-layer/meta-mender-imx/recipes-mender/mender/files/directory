@@ -1,0 +1,95 @@
+#!/bin/sh
+
+set -e
+
+STATE="$1"
+FILES="$2"
+
+prev_files_tar="$FILES"/tmp/prev_files.tar
+update_files_tar="$FILES"/files/update.tar
+dest_dir_file="$FILES"/files/dest_dir
+
+# État initial du montage (1=RO, 0=RW)
+was_rw_initially=0
+
+check_and_remount_rw() {
+    # Vérifier si déjà en RW
+    if mount | grep -q " / .*rw,"; then
+        was_rw_initially=1
+        echo "Already mounted read-write, keeping RW"
+    else
+        echo "Remounting / as read-write"
+        mount -o remount,rw /
+    fi
+}
+
+remount_ro_if_needed() {
+    # Ne remettre en RO que si c'était initialement en RO
+    if [ $was_rw_initially -eq 0 ]; then
+        echo "Remounting / as read-only (was RO initially)"
+        mount -o remount,ro /
+    else
+        echo "Keeping read-write (was RW initially)"
+    fi
+}
+
+case "$STATE" in
+    NeedsArtifactReboot)
+        echo "No"
+        ;;
+
+    SupportsRollback)
+        echo "Yes"
+        ;;
+
+    ArtifactInstall)
+        dest_dir=$(cat "${dest_dir_file}")
+        test -z "$dest_dir" && \
+            echo "Fatal error: dest_dir is undefined." >&2 && exit 1
+        test "$dest_dir" = "/" && \
+            echo "Error: destination dir is '/', install not supported." >&2 && exit 1
+
+        # Vérifier/remonter en RW si nécessaire
+        check_and_remount_rw
+
+        mkdir -p "${dest_dir}"
+
+        # Sauvegarde de l'ancien contenu
+        if ! tar -cf "${prev_files_tar}" -C "${dest_dir}" . ; then
+            ret=$?
+            rm -f "${prev_files_tar}"
+            remount_ro_if_needed
+            exit $ret
+        fi
+
+        # Appliquer l'update
+        rm -rf "${dest_dir}"
+        mkdir -p "${dest_dir}"
+        tar -xf "${update_files_tar}" -C "${dest_dir}"
+
+        # Remettre en RO seulement si nécessaire
+        remount_ro_if_needed
+        ;;
+
+    ArtifactRollback)
+        test -f "${prev_files_tar}" || exit 0
+
+        dest_dir=$(cat "${dest_dir_file}")
+        test -z "$dest_dir" && \
+            echo "Fatal error: dest_dir is undefined." >&2 && exit 1
+
+        test "$dest_dir" = "/" && \
+            echo "Info: destination dir is '/', not performing rollback." && exit 0
+
+        check_and_remount_rw
+
+        # Restaurer le backup
+        rm -rf "${dest_dir}"
+        mkdir -p "${dest_dir}"
+        tar -xf "${prev_files_tar}" -C "${dest_dir}"
+
+        remount_ro_if_needed
+        ;;
+esac
+
+exit 0

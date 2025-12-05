@@ -16,6 +16,9 @@ dest_dir_file="$FILES/files/dest_dir"
 filename_file="$FILES/files/filename"
 permissions_file="$FILES/files/permissions"
 
+# État initial du montage (1=RO, 0=RW)
+was_rw_initially=0
+
 safe_copy() {
     if [ $# -gt 2 ]; then
         echo "safe_copy can only handle one file copy at a time" >&2
@@ -25,6 +28,27 @@ safe_copy() {
     sync "$2".tmp || return $?
     mv "$2".tmp "$2" || return $?
     sync "$(dirname "$2")" || return $?
+}
+
+check_and_remount_rw() {
+    # Vérifier si déjà en RW
+    if mount | grep -q " / .*rw,"; then
+        was_rw_initially=1
+        echo "Already mounted read-write, keeping RW"
+    else
+        echo "Remounting / as read-write"
+        mount -o remount,rw /
+    fi
+}
+
+remount_ro_if_needed() {
+    # Ne remettre en RO que si c'était initialement en RO
+    if [ $was_rw_initially -eq 0 ]; then
+        echo "Remounting / as read-only (was RO initially)"
+        mount -o remount,ro /
+    else
+        echo "Keeping read-write (was RW initially)"
+    fi
 }
 
 case "$STATE" in
@@ -42,12 +66,20 @@ case "$STATE" in
         test -z "$dest_dir" -o -z "$filename" && \
             echo "Fatal error: dest_dir or filename are undefined." >&2 && exit 1
 
+        # Vérifier/remonter en RW si nécessaire
+        check_and_remount_rw
+
         mkdir -p "$dest_dir"
         mkdir -p "$tmp_backup_dir"
 
         # Backup old kernel if it exists
         if test -f "$dest_dir/$filename"; then
-            safe_copy "$dest_dir/$filename" "$tmp_backup_dir/$filename"
+            if ! safe_copy "$dest_dir/$filename" "$tmp_backup_dir/$filename"; then
+                ret=$?
+                rm -rf "$tmp_backup_dir"
+                remount_ro_if_needed
+                exit $ret
+            fi
         fi
 
         # Apply permissions if file exists
@@ -61,6 +93,9 @@ case "$STATE" in
 
         # Sync to make sure bootloader sees it
         sync
+
+        # Remettre en RO seulement si nécessaire
+        remount_ro_if_needed
         ;;
 
     ArtifactVerifyReboot)
@@ -75,7 +110,9 @@ case "$STATE" in
         filename=$(cat "$filename_file")
         dest_dir=$(cat "$dest_dir_file")
         if test -f "$tmp_backup_dir/$filename"; then
+            check_and_remount_rw
             safe_copy "$tmp_backup_dir/$filename" "$dest_dir/$filename"
+            remount_ro_if_needed
         fi
         ;;
 
