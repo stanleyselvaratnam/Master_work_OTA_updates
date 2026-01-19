@@ -353,10 +353,15 @@ local_conf_header:
     DISTRO_FEATURES:append = " optee tee dm-verity tpm"
     DISTRO_FEATURES:append = " security"
 
-    # Commented: HAB/secure boot and initramfs options
+    # HAB/secure boot enable
     INHERIT += "tdxref-signed"
     TDX_IMX_HAB_ENABLE = "1"
     TDX_IMX_HAB_CST_DIR = "${TOPDIR}/../IMX_CST_TOOL_NEW/cst-4.0.1"
+    TDX_IMX_HAB_CST_CRYPTO = "rsa"
+    TDX_IMX_HAB_CST_KEY_SIZE = "2048"
+    TDX_IMX_HAB_CST_DIG_ALGO = "sha256"
+    TDX_IMX_HAB_CST_SRK_INDEX "1"
+
 
     # U-Boot Hardening
     TDX_UBOOT_HARDENING_ENABLE  = "1"
