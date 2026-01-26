@@ -1,78 +1,99 @@
 [submodule "meta-openembedded"]
-	path = meta-openembedded
-	url = https://github.com/openembedded/meta-openembedded.git
+    path = meta-openembedded
+    url = https://github.com/openembedded/meta-openembedded.git
+    branch = scarthgap
+
 [submodule "poky"]
-	path = poky
-	url = https://github.com/yoctoproject/poky
-	branch = scarthgap
+    path = poky
+    url = https://github.com/yoctoproject/poky.git
+    branch = scarthgap
+
 [submodule "meta-mender"]
-	path = meta-mender
-	url = https://github.com/mendersoftware/meta-mender.git
-	branch = scarthgap
+    path = meta-mender
+    url = https://github.com/mendersoftware/meta-mender.git
+    branch = scarthgap
+
 [submodule "meta-custom"]
-	path = meta-custom
-	url = https://github.com/stanleyselvaratnam/meta-custom.git
-	branch = main
+    path = meta-custom
+    url = https://github.com/stanleyselvaratnam/meta-custom.git
+    branch = main
+
 [submodule "meta-raspberrypi"]
-	path = meta-raspberrypi
-	url = https://git.yoctoproject.org/git/meta-raspberrypi
-	branch = scarthgap
-[submodule "meta-mender-community"]
-	path = meta-mender-community
-	url = https://github.com/mendersoftware/meta-mender-community.git
-	branch = scarthgap
-[submodule "meta-lts-mixins-uboot"]
-	path = meta-lts-mixins-uboot
-	url = https://git.yoctoproject.org/meta-lts-mixins
-	branch = scarthgap/u-boot
-[submodule "layers/meta-secure-core"]
-	path = layers/meta-secure-core
-	url = https://github.com/Wind-River/meta-secure-core.git
+    path = meta-raspberrypi
+    url = https://git.yoctoproject.org/git/meta-raspberrypi
+    branch = scarthgap
+
 [submodule "meta-arm"]
-	path = meta-arm
-	url = ./meta-arm
+    path = meta-arm
+    url = https://git.yoctoproject.org/git/meta-arm
+    branch = scarthgap
+
 [submodule "meta-ti"]
-	path = meta-ti
-	url = ./meta-ti
-[submodule "meta-toradex-ti"]
-	path = meta-toradex-ti
-	url = ./meta-toradex-ti
-[submodule "meta-toradex-tezi"]
-	path = meta-toradex-tezi
-	url = ./meta-toradex-tezi
+    path = meta-ti
+    url = https://git.yoctoproject.org/git/meta-ti
+    branch = scarthgap
+
 [submodule "meta-freescale"]
-	path = meta-freescale
-	url = ./meta-freescale
-[submodule "meta-qt5"]
-	path = meta-qt5
-	url = ./meta-qt5
-[submodule "meta-security"]
-	path = meta-security
-	url = ./meta-security
-[submodule "meta-freescale-distro"]
-	path = meta-freescale-distro
-	url = ./meta-freescale-distro
+    path = meta-freescale
+    url = https://github.com/Freescale/meta-freescale.git
+    branch = scarthgap
+
 [submodule "meta-freescale-3rdparty"]
-	path = meta-freescale-3rdparty
-	url = ./meta-freescale-3rdparty
+    path = meta-freescale-3rdparty
+    url = https://github.com/Freescale/meta-freescale-3rdparty.git
+    branch = scarthgap
+
+[submodule "meta-freescale-distro"]
+    path = meta-freescale-distro
+    url = https://github.com/Freescale/meta-freescale-distro.git
+    branch = scarthgap
+
+[submodule "meta-qt5"]
+    path = meta-qt5
+    url = https://github.com/meta-qt5/meta-qt5.git
+    branch = scarthgap
+
+[submodule "meta-security"]
+    path = meta-security
+    url = https://git.yoctoproject.org/git/meta-security
+    branch = scarthgap
+
 [submodule "meta-toradex-bsp-common"]
-	path = meta-toradex-bsp-common
-	url = ./meta-toradex-bsp-common
+    path = meta-toradex-bsp-common
+    url = https://github.com/toradex/meta-toradex-bsp-common.git
+    branch = scarthgap-7.x.y
+
 [submodule "meta-toradex-nxp"]
-	path = meta-toradex-nxp
-	url = ./meta-toradex-nxp
+    path = meta-toradex-nxp
+    url = https://github.com/toradex/meta-toradex-nxp.git
+    branch = scarthgap-7.x.y
+
 [submodule "meta-toradex-distro"]
-	path = meta-toradex-distro
-	url = ./meta-toradex-distro
+    path = meta-toradex-distro
+    url = https://github.com/toradex/meta-toradex-distro.git
+    branch = scarthgap-7.x.y
+
 [submodule "meta-toradex-demos"]
-	path = meta-toradex-demos
-	url = ./meta-toradex-demos
+    path = meta-toradex-demos
+    url = https://github.com/toradex/meta-toradex-demos.git
+    branch = scarthgap-7.x.y
+
 [submodule "meta-toradex-security"]
-	path = meta-toradex-security
-	url = ./meta-toradex-security
+    path = meta-toradex-security
+    url = https://github.com/toradex/meta-toradex-security.git
+    branch = scarthgap-7.x.y
+
+[submodule "meta-toradex-tezi"]
+    path = meta-toradex-tezi
+    url = https://github.com/toradex/meta-toradex-tezi.git
+    branch = scarthgap-7.x.y
+
+[submodule "meta-toradex-ti"]
+    path = meta-toradex-ti
+    url = http://git.toradex.com/meta-toradex-ti.git
+    branch = scarthgap-7.x.y
+
 [submodule "meta-lts-mixins"]
-	path = meta-lts-mixins
-	url = ./meta-lts-mixins
-[submodule "meta-mender-kernel"]
-	path = meta-mender-kernel
-	url = ./meta-mender-kernel
+    path = meta-lts-mixins
+    url = https://git.yoctoproject.org/git/meta-lts-mixins
+    branch = scarthgap
