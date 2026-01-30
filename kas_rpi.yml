@@ -58,20 +58,21 @@ repos:
   #   refspec: "main"
 
 
-  meta-custom:
-    url: "https://github.com/stanleyselvaratnam/meta-custom.git"
-    refspec: "main"
-    layers:
-      meta-hellocustom:
-      meta-key:
+  # meta-custom:
+  #   url: "https://github.com/stanleyselvaratnam/meta-custom.git"
+  #   refspec: "main"
+  #   layers:
+  #     meta-hellocustom:
+  #     meta-key:
 
-  meta-imx8mp-rega:
+  meta-rpi-rega:
     path: "meta-imx8mp-rega"
     layers:
       meta-local:
       meta-myapps:
       meta-connectivity:
       meta-crypto:
+      meta-key:
       # meta-wic:
       # meta-rollback:
       # meta-kernel-custom:
