@@ -113,12 +113,13 @@ repos:
     #commit: "bff4b64715aae33e5c3a0bf5c804e6a1f4726c1c"
     layers:
       meta-mender-core:
-
-  meta-custom:
-    url: "https://github.com/stanleyselvaratnam/meta-custom.git"
-    refspec: "main"
-    layers:
-      meta-key:
+      
+  # Test custom layer integration from github
+  # meta-custom:
+  #   url: "https://github.com/stanleyselvaratnam/meta-custom.git"
+  #   refspec: "main"
+  #   layers:
+  #     meta-key:
 
   meta-imx8mp-rega:
     path: "meta-imx8mp-rega"
@@ -127,10 +128,11 @@ repos:
       meta-wic:
       meta-local:
       meta-connectivity:
+      meta-key:
       meta-custom-u-boot:
       meta-mender-imx:
       meta-imx-firmware:
-      # meta-crypto:
+      meta-crypto:
       meta-example:
       # meta-rollback:
       meta-custom-security:
@@ -326,12 +328,15 @@ local_conf_header:
     # * ================================================================
     # * Security Features (Toradex meta-toradex-security)
     # * ================================================================
-        
+
+    # --- CVE CHECK ---
     # Enable VEX (Vendor Extension) support
     INHERIT += "vex"
 
+    # --- FULL ROOTFS READ-ONLY ---
     IMAGE_FEATURES += "read-only-rootfs"
 
+    # --- ENCRYPTED PARTITION CAAM ---
     # Enable encrypted rootfs and OP-TEE
     INHERIT += "tdx-encrypted tdx-optee"
 
@@ -346,6 +351,7 @@ local_conf_header:
     TDX_ENC_MAPPER_NAME = "securedata"
     TDX_ENC_STORAGE_MOUNTPOINT = "/securedata" 
 
+    # --- TEE and fTPM ---
     # Force OP-TEE tests and fTPM (Firmware TPM)
     TDX_OPTEE_INSTALL_TESTS = "1"
     TDX_OPTEE_FTPM = "1"
@@ -354,8 +360,9 @@ local_conf_header:
     DISTRO_FEATURES:append = " optee tee dm-verity tpm"
     DISTRO_FEATURES:append = " security"
 
+    # --- SECURE BOOT and UBOOT HARDENING---
     # HAB/secure boot enable
-    INHERIT += "tdx-signed"
+    INHERIT += "tdxref-signed"
     TDX_IMX_HAB_ENABLE = "1"
     TDX_IMX_HAB_CST_DIR = "${TOPDIR}/../IMX_CST_TOOL_NEW/cst-4.0.1"
     TDX_IMX_HAB_CST_CRYPTO = "rsa"
@@ -371,24 +378,68 @@ local_conf_header:
     # Take the signed FIT Image (Kernel, DTB, initramfs)
     KERNEL_IMAGETYPE = "fitImage"
 
-    # ! Doesn't work
+    # ! Doesn't work ROOTFS
     # Configuring rootfs image signing
-    # DM_VERITY_IMAGE = "tdx-reference-minimal-image"
-    # # ARTIFACTIMG_FSTYPE = "ext4"
-    # # IMAGE_ROOTFS_SIZE = "3145728"
-    # # IMAGE_OVERHEAD_FACTOR = "1.0"
-    # # IMAGE_ROOTFS_EXTRA_SPACE = "0"
-    # # MENDER_DATA_PART_FSTYPE = "ext4"
-    # INITRAMFS_IMAGE = "tdx-reference-ramdisk-image"
-    # INITRAMFS_IMAGE_NAME = "tdx-reference-ramdisk-image-imx8mp-verdin"
-    # INITRAMFS_IMAGE_BUNDLE = "1"
-    # INITRAMFS_KERNEL_IMAGE = "fitImage-${MACHINE}.bin"
+    DM_VERITY_IMAGE = "tdx-reference-minimal-image"
+    # ARTIFACTIMG_FSTYPE = "ext4"
+    # IMAGE_ROOTFS_SIZE = "3145728"
+    # IMAGE_OVERHEAD_FACTOR = "1.0"
+    # IMAGE_ROOTFS_EXTRA_SPACE = "0"
+    # MENDER_DATA_PART_FSTYPE = "ext4"
+    INITRAMFS_IMAGE = "tdx-reference-ramdisk-image"
+    INITRAMFS_IMAGE_NAME = "tdx-reference-ramdisk-image-imx8mp-verdin"
+    INITRAMFS_IMAGE_BUNDLE = "1"
+    INITRAMFS_KERNEL_IMAGE = "fitImage-${MACHINE}.bin"
 
-    # IMAGE_BOOT_FILES:append = " ${INITRAMFS_KERNEL_IMAGE};fitImage"
-    # do_image_bootimg[depends] += "virtual/kernel:do_deploy"
+    IMAGE_BOOT_FILES:append = " ${INITRAMFS_KERNEL_IMAGE};fitImage"
+    do_image_bootimg[depends] += "virtual/kernel:do_deploy"
+    # IMAGE_ROOTFS_EXTRA_SPACE = "65536"
 
-    # # IMAGE_ROOTFS_EXTRA_SPACE = "65536"
+    # Test dm-verity with minimal partition
 
+    # # Activer la génération de l'image verity
+    # IMAGE_CLASSES += "dm-verity-img"
+
+    # # Définir le type de filesystem de base
+    # IMAGE_FSTYPES += "ext4.verity"
+
+    # # FORCER l'alignement des blocs à 4096 (très important pour i.MX8)
+    # STAGING_VERITY_BLOCK_SIZE = "4096"
+    # BLOCK_SIZE = "4096"
+    # DM_VERITY_IMAGE_DATA_BLOCK_SIZE = "4096"
+    # DM_VERITY_ALIGNMENT = "4096"
+    # IMAGE_ROOTFS_ALIGNMENT = "4096"
+    # # Forcer la taille des blocs au niveau du système de fichiers ext4
+    # EXTRA_IMAGECMD:ext4 = "-b 4096"
+
+    # ================================================================
+    # TEST DM-VERITY (ISOLATED PARTITION)
+    # ================================================================
+    # On active les outils sans forcer le dm-verity sur le rootfs
+    DISTRO_FEATURES:append = " dm-verity"
+    # IMAGE_INSTALL:append = " cryptsetup lvm2 util-linux-lsblk"
+
+    # # --- CONFIGURATION DM-VERITY CRITIQUE ---
+    # # On active explicitement la classe Toradex qui gère le RootFS
+    # IMAGE_CLASSES += "dm-verity-img"
+    # DM_VERITY_IMAGE_TYPE = "ext4"
+    
+    # # On s'assure que les hashs sont bien concaténés (Combined Device)
+    # # C'est ce que ton dump PC a confirmé
+    # DM_VERITY_IMAGE_DATA_BLOCK_SIZE = "4096"
+
+    # # --- MENDER COMPATIBILITÉ ---
+    # # Empêche Mender de modifier la taille du FS au boot (ce qui brise Verity)
+    # MENDER_FEATURES_DISABLE:append = " mender-growfs-data"
+    
+
+    # # On s'assure que le kernel a bien les modules nécessaires
+    # KERNEL_CONFIG_FRAGMENTS:append = " ${TOPDIR}/../dm-verity.cfg"
+    # 1. Force la taille des blocs de données dm-verity à 4096
+    # DM_VERITY_IMAGE_DATA_BLOCK_SIZE = "4096"
+    # EXTRA_IMAGECMD:ext4 = "-b 4096"
+    # # Correction des dépendances pour éviter les métadonnées corrompues au build
+    do_image_wic[depends] += "tdx-reference-minimal-image:do_image_ext4"
     # * ================================================================
     # * Toradex Easy Installer
     # * ================================================================
