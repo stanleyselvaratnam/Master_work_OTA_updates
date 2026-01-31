@@ -1,11 +1,8 @@
 <div align="center">
-
-  <span style="font-size: 2.5em; font-weight: bold; display: block; margin-bottom: 0.2em;">
-    Master’s Thesis
-  </span>
-  <span style="font-size: 1.5em; font-weight: bold; color: #555; display: block;">
-    Yocto Project with OTA Updates & Secure Embedded Systems
-  </span>
+    <tr>
+      <td align="center">
+        <h1>Master’s Thesis</h1>
+        <h2><font color=615959>Yocto Project with OTA Updates & Secure Embedded Systems</font></h2>
 
   <br/>
 
