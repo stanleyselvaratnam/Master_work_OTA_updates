@@ -1,14 +1,48 @@
-# Master’s Thesis — Yocto Project with OTA Updates & Secure Embedded Systems
-<p align="center">
-<strong>Master’s Thesis — Yocto Project with OTA Updates & Secure Embedded Systems
-</p>
+<div align="center">
+  <span style="font-size: 2.5em; font-weight: bold; display: block; margin-bottom: 0.2em;">
+   Master's Thesis
+  </span>
+  <span style="font-size: 1.5em; font-weight: bold; color: #555; display: block;">
+  Yocto Project with OTA Updates & Secure Embedded Systems
+  </span>
 
-<p align="center">
-<img src="[https://img.shields.io/badge/Yocto-Scarthgap-white?style=for-the-badge&logo=yocto&logoColor=black](https://www.google.com/search?q=https://img.shields.io/badge/Yocto-Scarthgap-white%3Fstyle%3Dfor-the-badge%26logo%3Dyocto%26logoColor%3Dblack)" alt="Yocto Scarthgap">
-<img src="[https://img.shields.io/badge/Platform-Toradex_iMX8MP-white?style=for-the-badge&logo=linux&logoColor=black](https://www.google.com/search?q=https://img.shields.io/badge/Platform-Toradex_iMX8MP-white%3Fstyle%3Dfor-the-badge%26logo%3Dlinux%26logoColor%3Dblack)" alt="Toradex">
-<img src="[https://img.shields.io/badge/Security-HAB4](https://www.google.com/search?q=https://img.shields.io/badge/Security-HAB4)_|_CAAM-white?style=for-the-badge&logo=lock&logoColor=black" alt="Security">
-<img src="[https://img.shields.io/badge/OTA-Mender-white?style=for-the-badge&logo=mender&logoColor=black](https://www.google.com/search?q=https://img.shields.io/badge/OTA-Mender-white%3Fstyle%3Dfor-the-badge%26logo%3Dmender%26logoColor%3Dblack)" alt="Mender">
-</p>
+  <br/>
+
+  <img src="image/icon_drone_rega.png" 
+       alt="Embedded Drone System" 
+       width="400"
+       style="
+         animation: droneFloat 3s ease-in-out infinite;
+         transform-origin: center;
+       ">
+
+  <br/>
+
+  <p align="center">
+    <a href="https://www.yoctoproject.org/">
+      <img src="https://img.shields.io/badge/Yocto-Scarthgap-white?style=for-the-badge&logo=yocto&logoColor=black" alt="Yocto Project">
+    </a>
+    &nbsp;
+    <a href="https://www.toradex.com/computer-on-modules/verdin-arm-family/nxp-imx-8m-plus">
+      <img src="https://img.shields.io/badge/Platform-Toradex_iMX8MP-white?style=for-the-badge&logo=linux&logoColor=black" alt="Toradex Verdin">
+    </a>
+    &nbsp;
+    <a href="https://github.com/toradex/meta-toradex-security">
+      <img src="https://img.shields.io/badge/Security-HAB4_|_CAAM-white?style=for-the-badge&logo=lock&logoColor=black" alt="Security Layer">
+    </a>
+    &nbsp;
+    <a href="https://mender.io/">
+      <img src="https://img.shields.io/badge/OTA-Mender-white?style=for-the-badge&logo=mender&logoColor=black" alt="Mender OTA">
+    </a>
+  </p>
+</div>
+
+<style>
+@keyframes droneFloat {
+  0%, 100% { transform: translateY(10px); }
+  50% { transform: translateY(-10px); }
+}
+</style>
 
 ## Introduction
 
@@ -21,7 +55,7 @@ This project is part of the Master’s thesis and focuses on building a complete
 The main objective is to establish a reproducible build environment and validate system images across various platforms.
 The project also aims to integrate a robust OTA update mechanism using Mender to ensure long-term maintainability of the embedded system.
 
-## □ Prerequisites & Setup
+## Prerequisites & Setup
 
 ### 1. Clone the Project
 
