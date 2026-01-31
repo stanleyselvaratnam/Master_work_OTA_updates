@@ -328,7 +328,8 @@ local_conf_header:
     # * ================================================================
     # * Security Features (Toradex meta-toradex-security)
     # * ================================================================
-
+    BBMASK += "meta-toradex-security/dynamic-layers/toradex-bsp-common/recipes-bsp/u-boot/u-boot-distro-boot.bbappend"
+    
     # --- CVE CHECK ---
     # Enable VEX (Vendor Extension) support
     INHERIT += "vex"
