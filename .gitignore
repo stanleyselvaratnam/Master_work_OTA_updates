@@ -12,7 +12,7 @@ tmp/
 cache/
 mender-keys/private.key
 mender-keys/private-rotation.key
-
+IMX_CST_TOOL_NEW/
 
 # Bitbake/daemon artefacts
 bitbake.lock
