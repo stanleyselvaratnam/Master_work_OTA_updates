@@ -24,6 +24,10 @@
     <a href="https://mender.io/">
       <img src="https://img.shields.io/badge/OTA-Mender-white?style=for-the-badge&logo=mender&logoColor=black" alt="Mender OTA">
     </a>
+    &nbsp;
+    <a href="https://heig-vd.ch/recherche/instituts/reds">
+      <img src="https://img.shields.io/badge/Institute-REDS_|_HEIG--VD-g?style=for-the-badge" alt="REDS Institute">
+    </a>
   </p>
 </div>
 
