@@ -23,6 +23,16 @@
   <p><sub>Developed at the <strong>REDS Institute</strong></sub></p>
 </div>
 
+> [!CAUTION]
+> **dm-verity and Mender are currently mutually exclusive in this setup.**
+
+**Why?**
+* **Mender** requires a specific dual-partition (A/B) layout and integration with the U-Boot environment to handle seamless updates.
+* **dm-verity** enforces a read-only root filesystem with a strictly defined hash tree, which conflicts with the standard Mender artifact deployment and partition mounting logic used in our `master` branch.
+
+If you require **Mender** functionality, please switch back to the `master` branch:
+`git checkout master`
+
 ## Introduction
 
 This project is part of the Master’s thesis and focuses on building a complete embedded Linux system using the Yocto Project. The system is designed to run on multiple hardware platforms:

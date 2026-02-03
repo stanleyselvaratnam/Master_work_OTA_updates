@@ -363,7 +363,7 @@ local_conf_header:
 
     # --- SECURE BOOT and UBOOT HARDENING---
     # HAB/secure boot enable
-    INHERIT += "tdx-signed"
+    INHERIT += "tdxref-signed"
     TDX_IMX_HAB_ENABLE = "1"
     TDX_IMX_HAB_CST_DIR = "${TOPDIR}/../IMX_CST_TOOL_NEW/cst-4.0.1"
     TDX_IMX_HAB_CST_CRYPTO = "rsa"
@@ -376,6 +376,22 @@ local_conf_header:
     TDX_UBOOT_HARDENING_ENABLE  = "1"
     TDX_UBOOT_HARDENING_ENABLE_DBG = "1"
 
+    # Take the signed FIT Image (Kernel, DTB, initramfs)
+    KERNEL_IMAGETYPE = "fitImage"
+
+    # ! DM-VERITY DOESN'T WORK WITH MENDER
+    # Configuring rootfs image signing
+    DM_VERITY_IMAGE = "tdx-reference-minimal-image"
+    INITRAMFS_IMAGE = "tdx-reference-ramdisk-image"
+    INITRAMFS_IMAGE_NAME = "tdx-reference-ramdisk-image-imx8mp-verdin"
+    INITRAMFS_IMAGE_BUNDLE = "1"
+    INITRAMFS_KERNEL_IMAGE = "fitImage-${MACHINE}.bin"
+
+    IMAGE_BOOT_FILES:append = " ${INITRAMFS_KERNEL_IMAGE};fitImage"
+    do_image_bootimg[depends] += "virtual/kernel:do_deploy"
+
+    DISTRO_FEATURES:append = " dm-verity"
+    do_image_wic[depends] += "tdx-reference-minimal-image:do_image_ext4"
     # * ================================================================
     # * Toradex Easy Installer
     # * ================================================================
